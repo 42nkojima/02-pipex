@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/10 01:02:32 by nkojima           #+#    #+#             */
-/*   Updated: 2025/11/29 23:32:16 by nkojima          ###   ########.fr       */
+/*   Created: 2025/05/21 17:19:54 by nkojima           #+#    #+#             */
+/*   Updated: 2025/05/25 19:08:40 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *str)
+/**
+ * Outputs the string `s` for the specified file descriptor.
+ *
+ * If `s` is NULL, the function does nothing.
+ *
+ * Params:
+ * @s: The string to output.
+ * @fd: The file descriptor to write to.
+ */
+void	ft_putstr_fd(char *str, int fd)
 {
-	size_t	len;
-
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	if (!str)
+		return ;
+	while (*str)
+	{
+		ft_putchar_fd(*str, fd);
+		str++;
+	}
 }

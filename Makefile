@@ -27,7 +27,8 @@ CFLAGS = -Wall -Wextra -Werror
 # ===============================
 #         Directory Paths       #
 # ===============================
-LIBS_DIR = libs
+LIBFT_DIR = libs/libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = src
 OBJS_DIR = objs
@@ -40,42 +41,35 @@ SRCS =  main.c
 OBJ_FILES = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
 # ===============================
-#            Libraries          #
-# ===============================
-LIBS = ft_strlen.c
-
-LIBS_OBJ_FILES = $(addprefix $(OBJS_DIR)/$(LIBS_DIR)/, $(LIBS:.c=.o))
-
-# ===============================
 #         Build Rules           #
 # ===============================
 all: $(NAME)
 
-$(NAME): $(OBJ_FILES) $(LIBS_OBJ_FILES)
-	@$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) $(LIBS_OBJ_FILES)
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(NAME): $(LIBFT) $(OBJ_FILES)
+	@$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) $(LIBFT)
 	@echo "$(NAME): $(GREEN)object files were created $(RESET)"
 	@echo "$(NAME): $(YELLOW)$(NAME)$(RESET) $(GREEN)was created$(RESET)"
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -I$(SRC_DIR) -I$(LIBS_DIR) -c -o $@ $<
-	@echo "$(NAME): $(YELLOW)$@$(RESET) $(GREEN)was created$(RESET)"
-
-$(OBJS_DIR)/$(LIBS_DIR)/%.o: $(LIBS_DIR)/%.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -I$(LIBS_DIR) -c -o $@ $<
+	@$(CC) $(CFLAGS) -I$(SRC_DIR) -I$(LIBFT_DIR) -c -o $@ $<
 	@echo "$(NAME): $(YELLOW)$@$(RESET) $(GREEN)was created$(RESET)"
 
 # ===============================
 #         Clean Rules           #
 # ===============================
 clean:
+	@make -C $(LIBFT_DIR) clean
 	@if [ -d $(OBJS_DIR) ]; then \
 		rm -rf $(OBJS_DIR); \
 		echo "$(NAME): $(YELLOW)$(OBJS_DIR)$(RESET) $(RED)was deleted$(RESET)"; \
 	fi
 
 fclean: clean
+	@make -C $(LIBFT_DIR) fclean
 	@if [ -f $(NAME) ]; then \
 		rm -f $(NAME); \
 		echo "$(NAME): $(YELLOW)$(NAME)$(RESET) $(RED)was deleted$(RESET)"; \
