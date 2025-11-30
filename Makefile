@@ -32,6 +32,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = src
 OBJS_DIR = objs
+INCLUDES_DIR = includes
 
 # ===============================
 #         Source Files          #
@@ -55,7 +56,7 @@ $(NAME): $(LIBFT) $(OBJ_FILES)
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -I$(SRC_DIR) -I$(LIBFT_DIR) -c -o $@ $<
+	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -I$(SRC_DIR) -I$(LIBFT_DIR) -c -o $@ $<
 	@echo "$(NAME): $(YELLOW)$@$(RESET) $(GREEN)was created$(RESET)"
 
 # ===============================

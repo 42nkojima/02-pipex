@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/29 23:30:41 by nkojima           #+#    #+#             */
-/*   Updated: 2025/11/30 11:56:11 by nkojima          ###   ########.fr       */
+/*   Created: 2025/11/30 11:55:41 by nkojima           #+#    #+#             */
+/*   Updated: 2025/11/30 11:56:46 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#ifndef PIPEX_H
+# define PIPEX_H
 
-int	main(void)
-{
-	printf("Hello, World!\n");
-	return (0);
-}
+# include <stdio.h>
+
+#endif
