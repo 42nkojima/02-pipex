@@ -6,7 +6,7 @@
 #    By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/29 23:29:27 by nkojima           #+#    #+#              #
-#    Updated: 2025/11/29 23:34:30 by nkojima          ###   ########.fr        #
+#    Updated: 2025/11/30 11:24:10 by nkojima          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ OBJ_FILES = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 all: $(NAME)
 
 $(LIBFT):
-	@make -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJ_FILES)
 	@$(CC) $(CFLAGS) -o $@ $(OBJ_FILES) $(LIBFT)
@@ -62,16 +62,15 @@ $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
 #         Clean Rules           #
 # ===============================
 clean:
-	@make -C $(LIBFT_DIR) clean
 	@if [ -d $(OBJS_DIR) ]; then \
-		rm -rf $(OBJS_DIR); \
+		$(RM) -r $(OBJS_DIR); \
 		echo "$(NAME): $(YELLOW)$(OBJS_DIR)$(RESET) $(RED)was deleted$(RESET)"; \
 	fi
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@if [ -f $(NAME) ]; then \
-		rm -f $(NAME); \
+		$(RM) $(NAME); \
 		echo "$(NAME): $(YELLOW)$(NAME)$(RESET) $(RED)was deleted$(RESET)"; \
 	fi
 

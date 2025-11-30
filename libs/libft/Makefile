@@ -6,20 +6,28 @@
 #    By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/26 16:47:58 by nkojima           #+#    #+#              #
-#    Updated: 2025/10/15 22:59:11 by nkojima          ###   ########.fr        #
+#    Updated: 2025/11/30 11:24:06 by nkojima          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#################################
+# ===============================
+#             Color             #
+# ===============================
+GREEN = \033[0;32m
+RED = \033[0;31m
+YELLOW = \033[0;33m
+RESET = \033[0m
+
+# ===============================
 #            Settings           #
-#################################
-NAME      = libft.a
+# ===============================
+NAME      = libft
 CFLAGS    = -Wall -Wextra -Werror
 ARFLAGS   = rcs
 
-#################################
+# ===============================
 #         Source & Objects      #
-#################################
+# ===============================
 SRC_FILES = isalpha \
 			isdigit \
 			isalnum \
@@ -59,22 +67,30 @@ SRC_FILES = isalpha \
 SRCS 	   = $(addprefix ft_, $(addsuffix .c, $(SRC_FILES)))
 OBJS       = $(SRCS:.c=.o)
 
-#################################
-#            Rules              #
-#################################
-all: $(NAME)
+# ===============================
+#         Build Rules           #
+# ===============================
+all: $(NAME).a
 
-$(NAME): $(OBJS)
-	$(AR) $(ARFLAGS) $@ $?
+$(NAME).a: $(OBJS)
+	@$(AR) $(ARFLAGS) $@ $?
+	@echo "$(NAME): $(GREEN)object files were created$(RESET)"
+	@echo "$(NAME): $(YELLOW)$(NAME).a$(RESET) $(GREEN)was created$(RESET)"
 
 %.o: %.c libft.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "$(NAME): $(YELLOW)$@$(RESET) $(GREEN)was created$(RESET)"
 
+# ===============================
+#         Clean Rules           #
+# ===============================
 clean:
-	$(RM) $(OBJS)
+	@$(RM) $(OBJS)
+	@echo "$(NAME): $(YELLOW)object files$(RESET) $(RED)were deleted$(RESET)"
 
 fclean: clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME).a
+	@echo "$(NAME): $(YELLOW)$(NAME).a$(RESET) $(RED)was deleted$(RESET)"
 
 re: fclean all
 
