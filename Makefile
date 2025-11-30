@@ -59,6 +59,10 @@ $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -I$(SRC_DIR) -I$(LIBFT_DIR) -c -o $@ $<
 	@echo "$(NAME): $(YELLOW)$@$(RESET) $(GREEN)was created$(RESET)"
 
+debug: $(LIBFT) $(OBJ_FILES)
+	@$(CC) $(CFLAGS) -fsanitize=address -o $(NAME) $(OBJ_FILES) $(LIBFT)
+	@echo "$(NAME): $(GREEN)debug build with address sanitizer was created$(RESET)"
+
 # ===============================
 #         Clean Rules           #
 # ===============================
@@ -77,4 +81,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re debug
