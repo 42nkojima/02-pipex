@@ -37,7 +37,7 @@ INCLUDES_DIR = includes
 # ===============================
 #         Source Files          #
 # ===============================
-SRCS =  main.c
+SRCS =  main.c process.c pipe.c path.c file.c error.c utils.c
 
 OBJ_FILES = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
