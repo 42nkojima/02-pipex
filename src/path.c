@@ -42,18 +42,30 @@ char	*build_path(char *dir, char *cmd)
 	char	*path;
 
 	slash = ft_strjoin(dir, "/");
+	if (!slash)
+		error_exit("malloc failed", EXIT_GENERAL_ERROR);
 	path = ft_strjoin(slash, cmd);
+	if (!path)
+	{
+		free(slash);
+		error_exit("malloc failed", EXIT_GENERAL_ERROR);
+	}
 	free(slash);
 	return (path);
 }
 
 char	*check_executable(char *path)
 {
+	char	*dup;
+
 	if (access(path, F_OK) == SYSCALL_ERROR)
 		error_exit("command not found", EXIT_CMD_NOT_FOUND);
 	if (access(path, X_OK) == SYSCALL_ERROR)
 		error_exit("permission denied", EXIT_CMD_NOT_EXECUTABLE);
-	return (ft_strdup(path));
+	dup = ft_strdup(path);
+	if (!dup)
+		error_exit("malloc failed", EXIT_GENERAL_ERROR);
+	return (dup);
 }
 
 char	*find_command(char *cmd, char **envp)

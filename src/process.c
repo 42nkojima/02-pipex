@@ -26,8 +26,10 @@ void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
 	char	*cmd_path;
 
 	infile_fd = open_infile(infile);
-	dup2(infile_fd, FD_STDIN);
-	dup2(pipe_fd[1], FD_STDOUT);
+	if (dup2(infile_fd, FD_STDIN) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	if (dup2(pipe_fd[1], FD_STDOUT) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close_all_fds(infile_fd, pipe_fd);
 	cmd_args = parse_command(cmd);
 	cmd_path = find_command(cmd_args[0], envp);
@@ -49,8 +51,10 @@ void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
 	char	*cmd_path;
 
 	outfile_fd = open_outfile(outfile);
-	dup2(pipe_fd[0], FD_STDIN);
-	dup2(outfile_fd, FD_STDOUT);
+	if (dup2(pipe_fd[0], FD_STDIN) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close_all_fds(outfile_fd, pipe_fd);
 	cmd_args = parse_command(cmd);
 	cmd_path = find_command(cmd_args[0], envp);

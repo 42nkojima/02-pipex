@@ -55,8 +55,10 @@ int	wait_and_get_exit_code(pid_t pid1, pid_t pid2)
 	int	status;
 	int	exit_code;
 
-	waitpid(pid1, &status, SYSCALL_SUCCESS);
-	waitpid(pid2, &status, SYSCALL_SUCCESS);
+	if (waitpid(pid1, &status, SYSCALL_SUCCESS) == SYSCALL_ERROR)
+		error_exit("waitpid failed", EXIT_GENERAL_ERROR);
+	if (waitpid(pid2, &status, SYSCALL_SUCCESS) == SYSCALL_ERROR)
+		error_exit("waitpid failed", EXIT_GENERAL_ERROR);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
