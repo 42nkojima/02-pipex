@@ -64,7 +64,7 @@ SRC_FILES = isalpha \
 			putstr_fd \
 			putendl_fd \
 			putnbr_fd
-SRCS 	   = $(addprefix ft_, $(addsuffix .c, $(SRC_FILES)))
+SRCS 	   = $(addprefix ft_, $(addsuffix .c, $(SRC_FILES))) get_next_line.c
 OBJS       = $(SRCS:.c=.o)
 
 # ===============================

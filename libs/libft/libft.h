@@ -18,6 +18,10 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
@@ -54,5 +58,6 @@ void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *str, int fd);
 void		ft_putendl_fd(char *str, int fd);
 void		ft_putnbr_fd(int nb, int fd);
+char		*get_next_line(int fd);
 
 #endif
