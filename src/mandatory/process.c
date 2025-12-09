@@ -38,10 +38,13 @@ void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
 		ft_putstr_fd("pipex: ", FD_STDERR);
 		ft_putstr_fd(cmd_args[0], FD_STDERR);
 		ft_putendl_fd(": command not found", FD_STDERR);
+		free_array(cmd_args);
 		exit(EXIT_CMD_NOT_FOUND);
 	}
 	execve(cmd_path, cmd_args, envp);
-	handle_exec_error(cmd_args[0]);
+	free_array(cmd_args);
+	free(cmd_path);
+	handle_exec_error(cmd);
 }
 
 void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
@@ -63,8 +66,11 @@ void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
 		ft_putstr_fd("pipex: ", FD_STDERR);
 		ft_putstr_fd(cmd_args[0], FD_STDERR);
 		ft_putendl_fd(": command not found", FD_STDERR);
+		free_array(cmd_args);
 		exit(EXIT_CMD_NOT_FOUND);
 	}
 	execve(cmd_path, cmd_args, envp);
-	handle_exec_error(cmd_args[0]);
+	free_array(cmd_args);
+	free(cmd_path);
+	handle_exec_error(cmd);
 }

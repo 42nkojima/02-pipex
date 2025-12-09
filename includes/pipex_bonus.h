@@ -36,7 +36,10 @@
 # define SYSCALL_ERROR -1
 # define SYSCALL_SUCCESS 0
 
-// Common functions (reused from mandatory)
+// ===============================
+//            Common
+// ===============================
+
 // path.c
 char	**parse_command(char *cmd_str);
 char	*find_command(char *cmd, char **envp);
@@ -57,14 +60,31 @@ int		wait_and_get_exit_code(pid_t pid1, pid_t pid2);
 // utils.c
 void	free_array(char **array);
 
-// Bonus-specific functions
+// ===============================
+//            Bonus
+// ===============================
+
+typedef struct s_pipex
+{
+	int		cmd_count;
+	int		**pipes;
+	pid_t	*pids;
+	char	**argv;
+	char	**envp;
+}	t_pipex;
+
 // multi_pipe_bonus.c
-// (to be implemented)
+void	init_pipex(t_pipex *pipex, int argc, char **argv, char **envp);
+void	create_pipes(t_pipex *pipex);
+void	close_pipes_parent(t_pipex *pipex);
+void	free_pipex(t_pipex *pipex);
 
 // heredoc_bonus.c
 // (to be implemented)
 
 // process_bonus.c
-// (to be implemented)
+void	exec_input_command(t_pipex *pipex, int index);
+void	exec_pipe_command(t_pipex *pipex, int index);
+void	exec_output_command(t_pipex *pipex, int index);
 
 #endif

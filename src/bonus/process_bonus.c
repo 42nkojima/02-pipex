@@ -6,10 +6,83 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:40:00 by nkojima           #+#    #+#             */
-/*   Updated: 2025/12/09 21:40:00 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/10 00:00:00 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-/* Process management for bonus */
+static void	close_pipes_children(t_pipex *pipex)
+{
+	int	i;
+
+	i = 0;
+	while (i < pipex->cmd_count - 1)
+	{
+		close(pipex->pipes[i][0]);
+		close(pipex->pipes[i][1]);
+		i++;
+	}
+}
+
+static void	execute_command(t_pipex *pipex, char *cmd)
+{
+	char	**cmd_args;
+	char	*cmd_path;
+
+	cmd_args = parse_command(cmd);
+	cmd_path = find_command(cmd_args[0], pipex->envp);
+	if (!cmd_path)
+	{
+		ft_putstr_fd("pipex: ", FD_STDERR);
+		ft_putstr_fd(cmd_args[0], FD_STDERR);
+		ft_putendl_fd(": command not found", FD_STDERR);
+		free_array(cmd_args);
+		free_pipex(pipex);
+		exit(EXIT_CMD_NOT_FOUND);
+	}
+	execve(cmd_path, cmd_args, pipex->envp);
+	free_array(cmd_args);
+	free(cmd_path);
+	free_pipex(pipex);
+	handle_exec_error(cmd);
+}
+
+void	exec_input_command(t_pipex *pipex, int index)
+{
+	int	infile_fd;
+
+	(void)index;
+	infile_fd = open_infile(pipex->argv[1]);
+	if (dup2(infile_fd, FD_STDIN) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	if (dup2(pipex->pipes[0][1], FD_STDOUT) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	close(infile_fd);
+	close_pipes_children(pipex);
+	execute_command(pipex, pipex->argv[2]);
+}
+
+void	exec_pipe_command(t_pipex *pipex, int index)
+{
+	if (dup2(pipex->pipes[index - 1][0], FD_STDIN) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	if (dup2(pipex->pipes[index][1], FD_STDOUT) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	close_pipes_children(pipex);
+	execute_command(pipex, pipex->argv[index + 2]);
+}
+
+void	exec_output_command(t_pipex *pipex, int index)
+{
+	int	outfile_fd;
+
+	outfile_fd = open_outfile(pipex->argv[pipex->cmd_count + 2]);
+	if (dup2(pipex->pipes[index - 1][0], FD_STDIN) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
+		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	close(outfile_fd);
+	close_pipes_children(pipex);
+	execute_command(pipex, pipex->argv[index + 2]);
+}
