@@ -12,7 +12,7 @@
 
 #include "../includes/pipex.h"
 
-void	close_all_fds(int file_fd, int pipe_fd[2])
+void	close_pipe_children(int file_fd, int pipe_fd[2])
 {
 	close(file_fd);
 	close(pipe_fd[0]);
@@ -30,7 +30,7 @@ void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	if (dup2(pipe_fd[1], FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
-	close_all_fds(infile_fd, pipe_fd);
+	close_pipe_children(infile_fd, pipe_fd);
 	cmd_args = parse_command(cmd);
 	cmd_path = find_command(cmd_args[0], envp);
 	if (!cmd_path)
@@ -55,7 +55,7 @@ void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
-	close_all_fds(outfile_fd, pipe_fd);
+	close_pipe_children(outfile_fd, pipe_fd);
 	cmd_args = parse_command(cmd);
 	cmd_path = find_command(cmd_args[0], envp);
 	if (!cmd_path)
