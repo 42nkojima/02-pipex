@@ -1,0 +1,33 @@
+{
+	"name": "42Tokyo - pipex",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+	"features": {},
+	"postCreateCommand": {
+		"install-packages": "sudo apt-get update && sudo apt-get install -y build-essential valgrind gcc make python3-pip",
+		"install-python-tools": "pip3 install norminette c_formatter_42",
+		"install-claude": "curl -fsSL https://claude.ai/install.sh | bash"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools",
+				"keyhr.42-c-format",
+				"DoKca.42-ft-count-line",
+				"kube.42header",
+				"Anthropic.claude-code"
+			],
+			"settings": {
+				"42header.username": "nkojima",
+				"42header.email": "nkojima@student.42tokyo.jp",
+				"[c]": {
+					"editor.formatOnSave": true,
+					"editor.tabSize": 4,
+					"editor.insertSpaces": false,
+					"files.trimTrailingWhitespace": true,
+					"files.insertFinalNewline": true,
+					"editor.defaultFormatter": "keyhr.42-c-format"
+				}
+			}
+		}
+	}
+}
