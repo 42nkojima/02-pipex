@@ -72,8 +72,10 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	pipex;
 
+	if (argc > 1 && ft_strncmp(argv[1], "here_doc", 9) == 0)
+		handle_heredoc(argc, argv, envp);
 	init_pipex(&pipex, argc, argv, envp);
-	create_pipes(&pipex);
+	create_pipes_parent(&pipex);
 	execute_pipeline(&pipex);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:40:00 by nkojima           #+#    #+#             */
-/*   Updated: 2025/12/09 21:40:00 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/11 07:30:00 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,7 @@
 # include <errno.h>
 # include <string.h>
 # include "../libs/libft/libft.h"
-
-# define EXIT_SUCCESS 0
-# define EXIT_GENERAL_ERROR 1
-# define EXIT_CMD_NOT_FOUND 127
-# define EXIT_CMD_NOT_EXECUTABLE 126
-# define EXIT_SIGNAL_BASE 128
-
-# define FD_STDIN 0
-# define FD_STDOUT 1
-# define FD_STDERR 2
-
-# define FILE_PERMISSION 0644
-
-# define SYSCALL_ERROR -1
-# define SYSCALL_SUCCESS 0
+# include "pipex_common.h"
 
 // ===============================
 //            Common
@@ -55,10 +41,11 @@ int		open_outfile(char *filename);
 void	validate_argc(int argc);
 void	error_exit(char *msg, int exit_code);
 void	handle_exec_error(char *cmd);
-int		wait_and_get_exit_code(pid_t pid1, pid_t pid2);
+int		wait_children_and_get_exit_code(pid_t pid1, pid_t pid2);
 
 // utils.c
 void	free_array(char **array);
+void	parse_and_execute_command(char *cmd_str, char **envp);
 
 // ===============================
 //            Bonus
@@ -75,12 +62,13 @@ typedef struct s_pipex
 
 // multi_pipe_bonus.c
 void	init_pipex(t_pipex *pipex, int argc, char **argv, char **envp);
-void	create_pipes(t_pipex *pipex);
+void	create_pipes_parent(t_pipex *pipex);
 void	close_pipes_parent(t_pipex *pipex);
 void	free_pipex(t_pipex *pipex);
 
 // heredoc_bonus.c
-// (to be implemented)
+void	handle_heredoc(int argc, char **argv, char **envp);
+int		read_heredoc(char *limiter);
 
 // process_bonus.c
 void	exec_input_command(t_pipex *pipex, int index);

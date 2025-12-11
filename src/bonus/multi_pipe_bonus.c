@@ -31,7 +31,7 @@ void	init_pipex(t_pipex *pipex, int argc, char **argv, char **envp)
 	}
 }
 
-void	create_pipes(t_pipex *pipex)
+void	create_pipes_parent(t_pipex *pipex)
 {
 	int	i;
 

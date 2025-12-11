@@ -19,7 +19,7 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid2;
 
 	validate_argc(argc);
-	create_pipe(pipe_fd);
+	create_pipe_parent(pipe_fd);
 	pid1 = fork();
 	if (pid1 == SYSCALL_ERROR)
 		error_exit("fork failed", EXIT_GENERAL_ERROR);
@@ -31,5 +31,5 @@ int	main(int argc, char **argv, char **envp)
 	if (pid2 == SYSCALL_SUCCESS)
 		exec_child2(argv[4], argv[3], pipe_fd, envp);
 	close_pipe_parent(pipe_fd);
-	return (wait_and_get_exit_code(pid1, pid2));
+	return (wait_children_and_get_exit_code(pid1, pid2));
 }

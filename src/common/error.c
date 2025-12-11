@@ -50,7 +50,7 @@ void	handle_exec_error(char *cmd)
 	}
 }
 
-int	wait_and_get_exit_code(pid_t pid1, pid_t pid2)
+int	wait_children_and_get_exit_code(pid_t pid1, pid_t pid2)
 {
 	int	status;
 	int	exit_code;
