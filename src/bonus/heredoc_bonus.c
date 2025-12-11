@@ -28,10 +28,13 @@ static int	open_outfile_append(char *filename)
 	return (fd);
 }
 
-static void	write_to_pipe(int pipefd, char *limiter)
+int	read_heredoc(char *limiter)
 {
+	int		pipefd[2];
 	char	*line;
 
+	if (pipe(pipefd) == SYSCALL_ERROR)
+		error_exit("pipe failed", EXIT_GENERAL_ERROR);
 	while (1)
 	{
 		ft_putstr_fd("> ", FD_STDOUT);
@@ -44,18 +47,9 @@ static void	write_to_pipe(int pipefd, char *limiter)
 			free(line);
 			break ;
 		}
-		ft_putstr_fd(line, pipefd);
+		ft_putstr_fd(line, pipefd[1]);
 		free(line);
 	}
-}
-
-int	read_heredoc(char *limiter)
-{
-	int	pipefd[2];
-
-	if (pipe(pipefd) == SYSCALL_ERROR)
-		error_exit("pipe failed", EXIT_GENERAL_ERROR);
-	write_to_pipe(pipefd[1], limiter);
 	close(pipefd[1]);
 	return (pipefd[0]);
 }
