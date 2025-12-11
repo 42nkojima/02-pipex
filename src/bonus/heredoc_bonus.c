@@ -6,7 +6,7 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:40:00 by nkojima           #+#    #+#             */
-/*   Updated: 2025/12/11 07:17:01 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/11 18:21:03 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,13 @@ int	read_heredoc(char *limiter)
 		ft_putstr_fd(line, pipefd[1]);
 		free(line);
 	}
+	get_next_line(-1);
 	close(pipefd[1]);
 	return (pipefd[0]);
 }
 
-static void	exec_heredoc_child1(char *cmd_str, int heredoc_fd,
-				int pipe_fd[2], char **envp)
+static void	exec_heredoc_child1(char *cmd_str, int heredoc_fd, int pipe_fd[2],
+		char **envp)
 {
 	if (dup2(heredoc_fd, FD_STDIN) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
@@ -67,10 +68,10 @@ static void	exec_heredoc_child1(char *cmd_str, int heredoc_fd,
 	parse_and_execute_command(cmd_str, envp);
 }
 
-static void	exec_heredoc_child2(char *cmd_str, char *outfile,
-				int pipe_fd[2], char **envp)
+static void	exec_heredoc_child2(char *cmd_str, char *outfile, int pipe_fd[2],
+		char **envp)
 {
-	int		outfile_fd;
+	int	outfile_fd;
 
 	outfile_fd = open_outfile_append(outfile);
 	if (dup2(pipe_fd[0], FD_STDIN) == SYSCALL_ERROR)

@@ -6,7 +6,7 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 00:00:00 by nkojima           #+#    #+#             */
-/*   Updated: 2025/12/01 00:00:00 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/11 18:21:24 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,26 @@ void	close_pipe_children(int file_fd, int pipe_fd[2])
 	close(pipe_fd[1]);
 }
 
-void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
+static void	execute_cmd(char *cmd, char **envp)
 {
-	int		infile_fd;
 	char	**cmd_args;
 	char	*cmd_path;
+
+	cmd_args = parse_command(cmd);
+	if (!cmd_args[0])
+		cmd_not_found_exit(cmd_args, NULL, NULL, NULL);
+	cmd_path = find_command(cmd_args[0], envp);
+	if (!cmd_path)
+		cmd_not_found_exit(cmd_args, cmd_args[0], NULL, NULL);
+	execve(cmd_path, cmd_args, envp);
+	free(cmd_path);
+	free_array(cmd_args);
+	handle_exec_error(cmd);
+}
+
+void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
+{
+	int	infile_fd;
 
 	infile_fd = open_infile(infile);
 	if (dup2(infile_fd, FD_STDIN) == SYSCALL_ERROR)
@@ -31,27 +46,12 @@ void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp)
 	if (dup2(pipe_fd[1], FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close_pipe_children(infile_fd, pipe_fd);
-	cmd_args = parse_command(cmd);
-	cmd_path = find_command(cmd_args[0], envp);
-	if (!cmd_path)
-	{
-		ft_putstr_fd("pipex: ", FD_STDERR);
-		ft_putstr_fd(cmd_args[0], FD_STDERR);
-		ft_putendl_fd(": command not found", FD_STDERR);
-		free_array(cmd_args);
-		exit(EXIT_CMD_NOT_FOUND);
-	}
-	execve(cmd_path, cmd_args, envp);
-	free_array(cmd_args);
-	free(cmd_path);
-	handle_exec_error(cmd);
+	execute_cmd(cmd, envp);
 }
 
 void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
 {
-	int		outfile_fd;
-	char	**cmd_args;
-	char	*cmd_path;
+	int	outfile_fd;
 
 	outfile_fd = open_outfile(outfile);
 	if (dup2(pipe_fd[0], FD_STDIN) == SYSCALL_ERROR)
@@ -59,18 +59,5 @@ void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp)
 	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close_pipe_children(outfile_fd, pipe_fd);
-	cmd_args = parse_command(cmd);
-	cmd_path = find_command(cmd_args[0], envp);
-	if (!cmd_path)
-	{
-		ft_putstr_fd("pipex: ", FD_STDERR);
-		ft_putstr_fd(cmd_args[0], FD_STDERR);
-		ft_putendl_fd(": command not found", FD_STDERR);
-		free_array(cmd_args);
-		exit(EXIT_CMD_NOT_FOUND);
-	}
-	execve(cmd_path, cmd_args, envp);
-	free_array(cmd_args);
-	free(cmd_path);
-	handle_exec_error(cmd);
+	execute_cmd(cmd, envp);
 }

@@ -6,7 +6,7 @@
 /*   By: nkojima <nkojima@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:40:00 by nkojima           #+#    #+#             */
-/*   Updated: 2025/12/10 00:00:00 by nkojima          ###   ########.fr       */
+/*   Updated: 2025/12/11 18:20:54 by nkojima          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,12 @@ static void	execute_command(t_pipex *pipex, char *cmd)
 	char	*cmd_path;
 
 	cmd_args = parse_command(cmd);
+	if (!cmd_args[0])
+		cmd_not_found_exit(cmd_args, NULL, (void (*)(void *))free_pipex, pipex);
 	cmd_path = find_command(cmd_args[0], pipex->envp);
 	if (!cmd_path)
-	{
-		ft_putstr_fd("pipex: ", FD_STDERR);
-		ft_putstr_fd(cmd_args[0], FD_STDERR);
-		ft_putendl_fd(": command not found", FD_STDERR);
-		free_array(cmd_args);
-		free_pipex(pipex);
-		exit(EXIT_CMD_NOT_FOUND);
-	}
+		cmd_not_found_exit(cmd_args, cmd_args[0], (void (*)(void *))free_pipex,
+			pipex);
 	execve(cmd_path, cmd_args, pipex->envp);
 	free_array(cmd_args);
 	free(cmd_path);

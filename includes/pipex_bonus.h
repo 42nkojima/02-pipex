@@ -46,6 +46,11 @@ int		wait_children_and_get_exit_code(pid_t pid1, pid_t pid2);
 // utils.c
 void	free_array(char **array);
 void	parse_and_execute_command(char *cmd_str, char **envp);
+void	cmd_not_found_exit(
+			char **cmd_args,
+			char *cmd,
+			void (*cleanup)(void *),
+			void *ctx);
 
 // ===============================
 //            Bonus
