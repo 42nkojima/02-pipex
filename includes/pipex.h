@@ -31,7 +31,6 @@ void	close_pipe_parent(int pipe_fd[2]);
 // process.c
 void	exec_child1(char *infile, char *cmd, int pipe_fd[2], char **envp);
 void	exec_child2(char *outfile, char *cmd, int pipe_fd[2], char **envp);
-void	close_pipe_children(int file_fd, int pipe_fd[2]);
 
 // path.c
 char	**parse_command(char *cmd_str);

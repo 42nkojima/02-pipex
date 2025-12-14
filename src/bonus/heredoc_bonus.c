@@ -73,11 +73,11 @@ static void	exec_heredoc_child2(char *cmd_str, char *outfile, int pipe_fd[2],
 {
 	int	outfile_fd;
 
-	outfile_fd = open_outfile_append(outfile);
 	if (dup2(pipe_fd[0], FD_STDIN) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
+	outfile_fd = open_outfile_append(outfile);
 	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close(outfile_fd);
