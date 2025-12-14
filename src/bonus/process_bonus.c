@@ -73,12 +73,12 @@ void	exec_output_command(t_pipex *pipex, int index)
 {
 	int	outfile_fd;
 
-	outfile_fd = open_outfile(pipex->argv[pipex->cmd_count + 2]);
 	if (dup2(pipex->pipes[index - 1][0], FD_STDIN) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
+	close_pipes_children(pipex);
+	outfile_fd = open_outfile(pipex->argv[pipex->cmd_count + 2]);
 	if (dup2(outfile_fd, FD_STDOUT) == SYSCALL_ERROR)
 		error_exit("dup2 failed", EXIT_GENERAL_ERROR);
 	close(outfile_fd);
-	close_pipes_children(pipex);
 	execute_command(pipex, pipex->argv[index + 2]);
 }
